@@ -18,8 +18,11 @@ def custom_cover_filename(instance, filename, object):
 
 
 class User(AbstractUser):
-    email = models.EmailField(blank=True, unique=True, validators=[EmailValidator(
-        message="Please enter a valid email address.")])
+    email = models.EmailField(
+        blank=True,
+        unique=True,
+        validators=[EmailValidator(message="Please enter a valid email address.")],
+    )
     about = models.TextField()
     job = models.CharField(max_length=200)
     address = models.TextField()
@@ -44,18 +47,34 @@ class Book(models.Model, DirtyFieldsMixin):
     subject = models.TextField(null=True)
     type = models.ForeignKey("Type", models.PROTECT, related_name="book")
     section = models.CharField(max_length=250)
-    location = models.ForeignKey("Location", models.PROTECT, related_name="book", null=True)
+    location = models.ForeignKey(
+        "Location", models.PROTECT, related_name="book", null=True
+    )
     publisher = models.CharField(max_length=250)
     publishing_date = models.CharField(max_length=250, null=True)
     purchase_date = models.DateField(null=True, blank=True)
-    summary = models.FileField(upload_to=functools.partial(custom_cover_filename, object="summary"), blank=True, null=True)
-    cover = models.ImageField(upload_to=functools.partial(custom_cover_filename, object="cover"), blank=True, null=True)
+    summary = models.FileField(
+        upload_to=functools.partial(custom_cover_filename, object="summary"),
+        blank=True,
+        null=True,
+    )
+    cover = models.ImageField(
+        upload_to=functools.partial(custom_cover_filename, object="cover"),
+        blank=True,
+        null=True,
+    )
     isbn = models.CharField(max_length=14, blank=True, null=True)
     number_of_copies = models.IntegerField()
-    language = models.ForeignKey("Language", models.SET_NULL, related_name="book", null=True)
+    language = models.ForeignKey(
+        "Language", models.SET_NULL, related_name="book", null=True
+    )
     date_of_registration = models.DateField(default=datetime.today)
-    registrator = models.ForeignKey(User, models.SET_NULL, null=True, related_name="book_registrator")
-    last_editor = models.ForeignKey(User, models.SET_NULL, null=True, related_name="book_latest_editor")
+    registrator = models.ForeignKey(
+        User, models.SET_NULL, null=True, related_name="book_registrator"
+    )
+    last_editor = models.ForeignKey(
+        User, models.SET_NULL, null=True, related_name="book_latest_editor"
+    )
     last_edit_time = models.DateTimeField()
 
     def __str__(self):
